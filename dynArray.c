@@ -1,7 +1,6 @@
 /*	dynArray.c: Dynamic Array implementation. */
 #include <assert.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include "dynArray.h"
 
 /* ************************************************************************
@@ -288,13 +287,12 @@ void addHeap(DynArr *heap, TYPE node)
 	int currentPos;
 	currentPos = (heap->size - 1);
 
-	while(currentPos > 0) {
+	while(currentPos != 0) {
 		parentPos = (currentPos - 1) / 2;
 		/* compare the value of current node and parent node */
 		/* if current position value is less than parent position value, swap */
 		/* if(heap->data[currentPos] < heap->data[parentPos]) { */
 		if(compare(getDynArr(heap, currentPos), getDynArr(heap, parentPos)) == -1) {
-			printf("About to Swap\n");
 			swapDynArr(heap, currentPos, parentPos);
 			currentPos = parentPos;
 		} else {
@@ -314,16 +312,18 @@ void addHeap(DynArr *heap, TYPE node)
 void _adjustHeap(DynArr *heap, int max, int pos)
 {
   	/* FIXME */
+	assert( heap != 0);
 	int leftChild = (2 * pos) + 1;
 	int rightChild = (2 * pos) + 2;
+	int small;
 	if (rightChild < max) { /* if there is 2 children */
-		int small = _smallerIndexHeap(heap, leftChild, rightChild);
-		if (compare(getDynArr(heap, pos), getDynArr(heap, small)) == -1) {
+		small = _smallerIndexHeap(heap, leftChild, rightChild);
+		if (compare(getDynArr(heap, pos), getDynArr(heap, small)) == 1) {
 			swapDynArr(heap, pos, small);
 			_adjustHeap(heap, max, small);
 		}
 	} else if (leftChild < max) { /* if only one child */
-		if (compare(getDynArr(heap, pos), getDynArr(heap, leftChild)) == -1) {
+		if (compare(getDynArr(heap, pos), getDynArr(heap, leftChild)) == 1) {
 			swapDynArr(heap, pos, leftChild);
 			_adjustHeap(heap, max, leftChild);
 		}
@@ -339,6 +339,7 @@ void _adjustHeap(DynArr *heap, int max, int pos)
 void removeMinHeap(DynArr *heap)
 {
   	/* FIXME */
+	assert(heap != 0);
 	int last = sizeDynArr(heap) - 1;
 	assert (last != 0);
 	putDynArr(heap, 0, getDynArr(heap, last));
@@ -360,7 +361,7 @@ void _buildHeap(DynArr *heap)
 	assert(heap != 0);
 	assert(sizeDynArr(heap) > 0);
 	int max = sizeDynArr(heap);
-	for(int i = max/2 -1; i >= 0; i--) { /*(max/2 - 1) finds the largest non leaf node; */
+	for(int i = max/2 -1; i >= 0; i--) { /* (max/2 - 1) finds the largest non leaf node; */
 		_adjustHeap(heap, max, i);
 	}
 }
@@ -376,6 +377,7 @@ void sortHeap(DynArr *heap)
 {
 	/*FIXME*/
 	assert(heap != 0);
+	assert(sizeDynArr(heap) > 0);
 	_buildHeap(heap);
 	for(int i = sizeDynArr(heap) -1; i > 0; i--) {
 		swapDynArr(heap, 0, i);
