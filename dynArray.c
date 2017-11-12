@@ -341,7 +341,6 @@ void removeMinHeap(DynArr *heap)
   	/* FIXME */
 	assert(heap != 0);
 	int last = sizeDynArr(heap) - 1;
-	assert (last != 0);
 	putDynArr(heap, 0, getDynArr(heap, last));
 	removeAtDynArr(heap, last);
 	_adjustHeap(heap, last, 0);

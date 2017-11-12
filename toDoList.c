@@ -40,10 +40,10 @@ void saveList(DynArr *heap, FILE *filePtr)
   	/* FIX ME */
   assert(heap != 0);
   assert(sizeDynArr(heap) > 0);
-  TYPE taskToSave;
-  int heapSize = sizeDynArr(heap);
+  TYPE taskToSave; /* variable to store each task */
+  int heapSize = sizeDynArr(heap); /* store size of heap */
 
-  for (int i = 0; i < heapSize; i++) {
+  for (int i = 0; i < heapSize; i++) { /* for each task in the heap, save to file */
     taskToSave = getDynArr(heap, i);
     fprintf(filePtr, "%d\t%s\n", taskToSave.priority, taskToSave.description);
   }
@@ -61,6 +61,14 @@ void saveList(DynArr *heap, FILE *filePtr)
 void loadList(DynArr *heap, FILE *filePtr)
 {
   	/* FIX ME */
+  TYPE taskToRetrieve;
+  int priority;
+  char desc[TASK_DESC_SIZE];
+
+  while (fscanf(filePtr, "%d\t%s\n", &priority, desc) != EOF) { 
+    taskToRetrieve = createTask(priority, desc);
+    addHeap(heap, taskToRetrieve);
+  }
 }
 
 /*  Print the list
@@ -74,6 +82,21 @@ void printList(DynArr *heap)
 {
   	/* FIX ME  */
   assert(heap !=0);
+  assert(sizeDynArr(heap) > 0);
+
+  DynArr tempArr; /* to copy values */
+  TYPE minimum; /* to get minimum of tempArr */
+
+  /* copy tasks to new list */
+  copyDynArr(heap, &tempArr);
+
+  while(sizeDynArr(&tempArr) > 0) { /* for all elements */
+    minimum = getMinHeap(&tempArr);
+    printf("%s\n", minimum.description);
+    removeMinHeap(&tempArr);
+  }
+
+  freeDynArr(&tempArr);
 
 }
 
